@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Chania Bus & Spiagge - Guida Completa</title>
+  <style>
+    :root {
+      --bg: #F2F2F7;
+      --card-bg: #FFFFFF;
+      --text: #000000;
+      --text-main: #2C2C2E;
+      --text-sec: #6E6E73;
+      --accent: #007AFF;
+      --accent-bg: #E5F1FF;
+      --warning-bg: #FFF8E5;
+      --warning-text: #B25E00;
+      --shadow: rgba(0, 0, 0, 0.08);
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+      padding-bottom: 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    header { text-align: center; margin: 10px 0 24px 0; }
+    h1 { font-size: 30px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.5px; }
+    p.subtitle { font-size: 16px; color: var(--text-sec); margin: 0; font-weight: 500; }
+
+    /* Selettore a 3 pulsanti per includere l'Aeroporto */
+    .segmented-control {
+      display: flex;
+      background: #E5E5EA;
+      border-radius: 16px;
+      padding: 5px;
+      margin-bottom: 24px;
+      position: sticky;
+      top: 10px;
+      z-index: 100;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.1);
+    }
+
+    .segment-btn {
+      flex: 1;
+      border: none;
+      background: transparent;
+      padding: 14px 6px;
+      font-size: 16px;
+      font-weight: 700;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .segment-btn.active {
+      background: var(--card-bg);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      color: var(--accent);
+    }
+
+    .beach-card {
+      background: var(--card-bg);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: 0 6px 20px var(--shadow);
+      margin-bottom: 28px;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background-color: #E5E5EA;
+      display: block;
+      color: var(--text-sec);
+      text-align: center;
+      line-height: 220px;
+      font-size: 15px;
+    }
+
+    .card-content { padding: 22px; }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .beach-title { font-size: 26px; font-weight: 800; margin: 0; color: #000; }
+    
+    .time-badge {
+      background: var(--accent-bg);
+      color: var(--accent);
+      font-size: 16px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    /* Riquadro ad alto contrasto per indicare il bus da prendere */
+    .bus-line-box {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      padding: 12px 16px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      border-left: 5px solid #FF9500;
+      line-height: 1.4;
+    }
+
+    .bus-line-box strong {
+      color: #000;
+      font-weight: 800;
+      display: block;
+      margin-top: 2px;
+      font-size: 17px;
+    }
+
+    .description {
+      font-size: 18px;
+      color: var(--text-main);
+      line-height: 1.55;
+      margin: 0 0 24px 0;
+      font-weight: 400;
+    }
+
+    .actions { display: flex; gap: 12px; margin-bottom: 16px; }
+
+    .btn {
+      flex: 1;
+      padding: 16px 10px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s;
+    }
+
+    .btn-maps { background: #E5E5EA; color: #000; }
+    .btn-time { background: var(--accent); color: white; }
+    .btn:active { opacity: 0.7; }
+
+    .timetable-section {
+      display: none;
+      border-top: 2px solid #F2F2F7;
+      padding-top: 18px;
+      margin-top: 10px;
+    }
+    .timetable-section.open { display: block; }
+
+    .direction-toggle { display: flex; gap: 10px; margin-bottom: 16px; }
+
+    .dir-tab {
+      flex: 1;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      background: #F2F2F7;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: var(--text-sec);
+    }
+    .dir-tab.active { background: #34C759; color: white; }
+
+    .times-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      gap: 10px;
+    }
+
+    .time-slot {
+      background: #F2F2F7;
+      padding: 12px 4px;
+      border-radius: 12px;
+      text-align: center;
+      font-size: 17px;
+      font-weight: 700;
+      color: #000;
+    }
+    
+    .note-freq {
+      font-size: 15px;
+      color: var(--text-sec);
+      font-style: italic;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Spiagge e Bus Chania 🚌</h1>
+    <p class="subtitle">Guida Orari e Linee (Estate)</p>
+  </header>
+
+  <div class="segmented-control">
+    <button class="segment-btn active" onclick="setDirection('ovest', this)">⬅️ Verso Ovest</button>
+    <button class="segment-btn" onclick="setDirection('est', this)">Verso Est ➡️</button>
+    <button class="segment-btn" onclick="setDirection('aeroporto', this)">✈️ Aeroporto</button>
+  </div>
+
+  <div id="beaches-container"></div>
+
+  <script>
+    const destinations = [
+      // === VERSO OVEST ===
+      {
+        id: "agii-apostoli",
+        name: "Agii Apostoli",
+        direction: "ovest",
+        timeMinutes: 15,
+        busLine: "KISSAMOS / KASTELI oppure KOLYMBARI",
+        desc: "Tre baie a forma di ferro di cavallo, perfettamente riparate dal vento di tramontana (Meltemi). La sabbia è dorata e fine, e i fondali digradano dolcemente, rendendola ideale per una nuotata tranquilla. L'intera area è cinta da un bellissimo e profumato parco di pini marittimi che offre ombra naturale. Sono presenti stabilimenti, docce e baretti, pur mantenendo un'atmosfera molto più rilassata rispetto ai grandi resort più lontani.",
+        img: "img/agii-apostoli.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Agii+Apostoli+Beach+Chania",
+        freqNote: "✈️ I bus per l'ovest transitano ogni 15-20 min in estate:",
+        times: {
+          to: ["07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"],
+          from: ["12:15", "12:45", "13:15", "13:45", "14:15", "14:45", "15:15", "15:45", "16:15", "16:35", "16:55", "17:15", "17:35", "17:55", "18:15", "18:35", "18:55", "19:15", "19:40", "20:10", "20:40"]
+        }
+      },
+      {
+        id: "stalos",
+        name: "Stalos Beach",
+        direction: "ovest",
+        timeMinutes: 20,
+        busLine: "KISSAMOS / KASTELI oppure KOLYMBARI",
+        desc: "La prima grande spiaggia della lunga riviera ovest. Un litorale lunghissimo di sabbia chiara e soffice. Rispetto alla vicina e caotica Agia Marina, mantiene un profilo leggermente più tranquillo, ideale per chi ama gli ampi spazi senza rinunciare ai comfort: ci sono ottimi lettini, ombrelloni imbottiti e taverne tradizionali eccellenti posizionate subito alle spalle dell'arenile. Essendo aperta verso nord, in giornate ventose può presentare qualche onda.",
+        img: "img/stalos.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Stalos+Beach+Chania",
+        freqNote: "✈️ Servita dalla linea costiera principale (ogni 20 minuti circa):",
+        times: {
+          to: ["07:30", "08:00", "08:30", "09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"],
+          from: ["14:10", "14:40", "15:10", "15:40", "16:10", "16:30", "16:50", "17:10", "17:30", "17:50", "18:10", "18:30", "18:50", "19:10", "19:40", "20:10", "20:40", "21:10"]
+        }
+      },
+      {
+        id: "agia-marina",
+        name: "Agia Marina",
+        direction: "ovest",
+        timeMinutes: 25,
+        busLine: "KISSAMOS / KASTELI oppure KOLYMBARI",
+        desc: "Il vero cuore pulsante del turismo organizzato cretese. Qui la spiaggia è un tappeto infinito di sabbia fine dorata, costellato di beach club attrezzatissimi, musica diffusa, centri per sport acquatici (parasailing, moto d'acqua) e servizio bar direttamente sotto l'ombrellone. Subito di fronte si staglia la sagoma pittoresca dell'isolotto protetto di Thodorou. È la meta perfetta se cerchi massima comodità, energia e vita di mare a 360 gradi.",
+        img: "img/agia-marina.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Agia+Marina+Beach+Chania",
+        freqNote: "✈️ Transiti continui della linea per Kissamos/Kasteli (ogni 20 minuti):",
+        times: {
+          to: ["07:30", "08:00", "08:30", "09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"],
+          from: ["14:05", "14:35", "15:05", "15:35", "16:05", "16:25", "16:45", "17:05", "17:25", "17:45", "18:05", "18:25", "18:45", "19:05", "19:35", "20:05", "20:35", "21:05"]
+        }
+      },
+      {
+        id: "platanias",
+        name: "Platanias Beach",
+        direction: "ovest",
+        timeMinutes: 30,
+        busLine: "KISSAMOS / KASTELI oppure KOLYMBARI",
+        desc: "La naturale e scenografica prosecuzione di Agia Marina, con un tocco ancora più cosmopolita. La sabbia qui si mescola a piccolissimi e lisci ciottoli colorati sulla battigia. È delimitata da stabilimenti eleganti e grandi resort. Il punto di forza è che a fine giornata puoi salire a piedi nella 'Ano Platanias', la meravigliosa e antica parte alta del paese arroccata sulla collina, per goderti un tramonto sul golfo sorseggiando qualcosa.",
+        img: "img/platanias.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Platanias+Beach+Chania",
+        freqNote: "✈️ Autobus frequenti da e per Chania (ogni 20-30 min):",
+        times: {
+          to: ["07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00"],
+          from: ["14:00", "14:30", "15:00", "15:30", "16:00", "16:20", "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:30", "20:00", "20:30", "21:00"]
+        }
+      },
+      {
+        id: "maleme",
+        name: "Maleme Beach",
+        direction: "ovest",
+        timeMinutes: 38,
+        busLine: "KOLYMBARI oppure KISSAMOS / KASTELI",
+        desc: "Famosa per il suo ruolo storico durante la Seconda Guerra Mondiale, Maleme offre una spiaggia molto più silenziosa e selvaggia. Il fondo è un mix di sabbia scura e ciottoli tondi che rendono le acque trasparentissime. È la scelta tattica per scappare dalla folla di agosto: qui si respira assoluta pace e le taverne lungo la strada litoranea offrono porzioni abbondanti e prezzi molto più contenuti rispetto alla zona centrale.",
+        img: "img/maleme.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Maleme+Beach+Chania",
+        freqNote: "🚌 Linea Chania - Kolymbari/Kissamos (circa 1 bus ogni ora):",
+        times: {
+          to: ["07:30", "08:15", "09:00", "09:30", "10:30", "11:00", "12:00", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30"],
+          from: ["13:50", "14:50", "15:50", "16:50", "17:20", "17:50", "18:20", "18:50", "19:50", "20:50"]
+        }
+      },
+      {
+        id: "kolymbari",
+        name: "Kolymbari Beach",
+        direction: "ovest",
+        timeMinutes: 48,
+        busLine: "KOLYMBARI oppure KISSAMOS / KASTELI",
+        desc: "Borgo di pescatori situato all'estremità ovest della baia, dove finisce la lunghissima spiaggia continua. Spiaggia tranquilla di ciottoli con un mare trasparente, ideale per gli amanti dello snorkeling. È rinomata in tutta Creta per ospitare alcune delle migliori taverne di pesce fresco dell'isola, posizionate direttamente sul lungomare accanto al piccolo porto.",
+        img: "img/kolymbari.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kolymbari+Beach+Chania",
+        freqNote: "🚌 Orari marcia linea diretta per Kolymbari / Kissamos:",
+        times: {
+          to: ["07:30", "08:15", "09:00", "10:30", "11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30"],
+          from: ["13:40", "14:40", "15:40", "16:40", "17:10", "17:40", "18:10", "18:40", "19:40", "20:40"]
+        }
+      },
+
+      // === VERSO EST (AKROTIRI) ===
+      {
+        id: "kalathas",
+        name: "Kalathas Beach",
+        direction: "est",
+        timeMinutes: 20,
+        busLine: "STAVROS / HORAFAKIA",
+        desc: "Nascosta in una profonda insenatura della penisola di Akrotiri, vanta una sabbia finissima dal colore quasi bianco. L'acqua è molto bassa per decine e decine di metri dalla riva, rendendola simile a una piscina naturale caldissima. A brevissima distanza spunta un caratteristico isolotto roccioso che chi sa nuotare raggiunge facilmente in poche bracciate. È un'oasi tranquilla e molto amata dagli abitanti di Chania.",
+        img: "img/kalathas.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kalathas+Beach+Chania",
+        freqNote: "🚌 Servita dagli autobus diretti a Stavros:",
+        times: {
+          to: ["06:50", "09:00", "10:00", "12:00", "14:15", "16:00", "18:00", "20:00"],
+          from: ["10:50", "12:50", "15:05", "16:50", "18:50", "20:50"]
+        }
+      },
+      {
+        id: "marathi",
+        name: "Marathi Beach",
+        direction: "est",
+        timeMinutes: 30,
+        busLine: "MARATHI / LOUTRAKI",
+        desc: "Affacciata verso sud-est (e dunque strutturalmente al riparo dai forti venti del nord), Marathi è composta da due spiaggette gemelle divise da un porticciolo. La sabbia è fine, e il mare è costantemente piatto come una tavola, perfetto per un relax totale. Dal lettino si gode di una vista magnifica sulle Montagne Bianche all'orizzonte. È famosissima in zona per le pittoresche taverne dove si pranza praticamente 'pieds dans l'eau'.",
+        img: "img/marathi.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Marathi+Beach+Chania",
+        freqNote: "🚌 Orari stagionali estivi (Linea Marathi):",
+        times: {
+          to: ["09:00", "10:30", "12:00", "14:00", "16:30"],
+          from: ["12:45", "14:45", "17:15", "18:30"]
+        }
+      },
+      {
+        id: "stavros",
+        name: "Stavros Beach",
+        direction: "est",
+        timeMinutes: 35,
+        busLine: "STAVROS",
+        desc: "Diventata un'icona mondiale per aver ospitato le riprese del film 'Zorba il Greco', questa baia semicircolare è un capolavoro della natura. Le sue calme acque color smeraldo contrastano con la nuda e imponente montagna di roccia che si erge a picco proprio davanti alla spiaggia. Essendo un'insenatura quasi chiusa, funge da vera e propria laguna: non ci sono mai onde, rendendola praticabile e bellissima con qualsiasi meteo.",
+        img: "img/stavros.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Stavros+Beach+Chania",
+        freqNote: "🚌 Orari ufficiali linea Chania - Stavros:",
+        times: {
+          to: ["06:50", "09:00", "10:00", "12:00", "14:15", "16:00", "18:00", "20:00"],
+          from: ["10:40", "12:40", "14:55", "16:40", "18:40", "20:40"]
+        }
+      },
+      {
+        id: "seitan-limania",
+        name: "Seitan Limania",
+        direction: "est",
+        timeMinutes: 45,
+        busLine: "SEITAN LIMANIA",
+        desc: "Una caletta selvaggia di una bellezza folgorante e particolarissima. Il mare ha scavato nel corso dei millenni un profondo canyon a forma di fulmine tra le rocce, creando uno stretto canale d'acqua azzurrissima che si spinge nella terraferma. Attenzione: non c'è ombra, non è attrezzata, e per scendere dalla fermata del bus fino all'acqua bisogna affrontare un sentiero di capre molto ripido (assolutamente necessarie le scarpe da ginnastica chiuse!).",
+        img: "img/seitan.jpg",
+        mapsUrl: "https://www.google.com/maps/search/?api=1&query=Seitan+Limania+Beach+Chania",
+        freqNote: "🚌 Linea speciale estiva per Seitan Limania:",
+        times: {
+          to: ["10:00", "11:30", "13:30", "15:30", "17:30"],
+          from: ["12:15", "14:15", "16:15", "18:15"]
+        }
+      },
+
+      // === SEZIONE AEROPORTO ===
+      {
+        id: "chania-airport",
+        name: "Aeroporto di Chania (CHQ)",
+        direction: "aeroporto",
+        timeMinutes: 30,
+        busLine: "CHANIA AIRPORT (Daskalogiannis)",
+        desc: "Il pullman ufficiale KTEL è il mezzo più comodo e veloce per muoversi tra l'aeroporto internazionale Daskalogiannis e la Stazione Centrale dei bus di Chania (nel centro città). Si tratta di moderni pullman granturismo dotati di aria condizionata e capienti stive inferiori per riporre in totale comodità valigie di ogni dimensione. All'aeroporto, la fermata si trova sul marciapiede subito all'uscita degli Arrivi, girando a destra. Il biglietto costa circa 3,00 € e si può acquistare in biglietteria, al chiosco automatico fuori dagli arrivi o direttamente online.",
+        img: "img/airport.jpg",
+        mapsUrl: "https://maps.app.goo.gl/9Z3R6K9XQ1b4W5e69",
+        freqNote: "✈️ Servizio continuo estivo (tutti i giorni, ogni 30-45 min):",
+        times: {
+          to: ["05:00", "06:00", "06:45", "07:30", "08:15", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:15", "22:00", "22:45", "23:30"],
+          from: ["06:30", "07:15", "08:00", "08:45", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30", "21:00", "21:45", "22:30", "23:15", "00:00"]
+        }
+      }
+    ];
+
+    let currentDirection = 'ovest';
+
+    function renderDestinations() {
+      const container = document.getElementById('beaches-container');
+      container.innerHTML = '';
+
+      const filtered = destinations
+        .filter(b => b.direction === currentDirection)
+        .sort((a, b) => a.timeMinutes - b.timeMinutes);
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'beach-card';
+        
+        // Determina il testo per i pulsanti di direzione (per l'aeroporto cambiano le etichette)
+        const labelTo = item.direction === 'aeroporto' ? "Da Chania ➔ Aeroporto" : "Da Chania ➔ Spiaggia";
+        const labelFrom = item.direction === 'aeroporto' ? "Dall'Aeroporto ➔ Chania" : "Ritorno ➔ Chania";
+
+        card.innerHTML = `
+          <img src="${item.img}" alt="${item.name}" class="card-img" onerror="this.onerror=null; this.outerHTML='<div class=\\'card-img\\'>Manca foto (salva ${item.img} in cartella img)</div>';" loading="lazy">
+          <div class="card-content">
+            <div class="card-header">
+              <h2 class="beach-title">${item.name}</h2>
+              <div class="time-badge">⏱️ ~${item.timeMinutes} min</div>
+            </div>
+
+            <div class="bus-line-box">
+              🚏 Bus da cercare sul display in stazione:
+              <strong>${item.busLine}</strong>
+            </div>
+
+            <p class="description">${item.desc}</p>
+            
+            <div class="actions">
+              <a href="${item.mapsUrl}" target="_blank" class="btn btn-maps">📍 Google Maps</a>
+              <button class="btn btn-time" onclick="toggleTimetable('${item.id}')">🗓️ Orari Bus</button>
+            </div>
+
+            <div id="timetable-${item.id}" class="timetable-section">
+              <div class="direction-toggle">
+                <button id="btn-to-${item.id}" class="dir-tab active" onclick="switchRoute('${item.id}', 'to')">${labelTo}</button>
+                <button id="btn-from-${item.id}" class="dir-tab" onclick="switchRoute('${item.id}', 'from')">${labelFrom}</button>
+              </div>
+              <div id="freq-${item.id}" class="note-freq">${item.freqNote}</div>
+              <div id="grid-${item.id}" class="times-grid">
+                ${renderTimeSlots(item.times.to)}
+              </div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderTimeSlots(timesArray) {
+      return timesArray.map(time => `<div class="time-slot">${time}</div>`).join('');
+    }
+
+    function setDirection(dir, btnElement) {
+      currentDirection = dir;
+      document.querySelectorAll('.segment-btn').forEach(btn => btn.classList.remove('active'));
+      btnElement.classList.add('active');
+      renderDestinations();
+    }
+
+    function toggleTimetable(id) {
+      const section = document.getElementById(`timetable-${id}`);
+      section.classList.toggle('open');
+    }
+
+    function switchRoute(id, direction) {
+      const item = destinations.find(b => b.id === id);
+      const grid = document.getElementById(`grid-${id}`);
+      const btnTo = document.getElementById(`btn-to-${id}`);
+      const btnFrom = document.getElementById(`btn-from-${id}`);
+
+      if (direction === 'to') {
+        grid.innerHTML = renderTimeSlots(item.times.to);
+        btnTo.classList.add('active');
+        btnFrom.classList.remove('active');
+      } else {
+        grid.innerHTML = renderTimeSlots(item.times.from);
+        btnFrom.classList.add('active');
+        btnTo.classList.remove('active');
+      }
+    }
+
+    // Caricamento iniziale
+    renderDestinations();
+  </script>
+</body>
+</html>
