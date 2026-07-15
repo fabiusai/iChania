@@ -163,7 +163,7 @@
     }
     .timetable-section.open { display: block; }
 
-    .direction-toggle { display: flex; gap: 10px; margin-bottom: 16px; }
+    .direction-toggle { display: flex; gap: 10px; margin-bottom: 14px; }
 
     .dir-tab {
       flex: 1;
@@ -175,8 +175,23 @@
       border-radius: 12px;
       cursor: pointer;
       color: var(--text-sec);
+      transition: background 0.2s, color 0.2s;
     }
     .dir-tab.active { background: #34C759; color: white; }
+
+    /* Riquadro informativo per indicare che gli orari di ritorno sono indicativi */
+    .return-notice {
+      background: #F2F2F7;
+      color: var(--text-main);
+      font-size: 13.5px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      margin-bottom: 14px;
+      text-align: center;
+      line-height: 1.4;
+      border: 1px dashed rgba(0,0,0,0.15);
+    }
+    .return-notice strong { color: #000; }
 
     .times-grid-container {
       max-height: 220px;
@@ -186,7 +201,7 @@
       position: relative;
     }
     
-    /* Sfumatura inferiore per indicare la presenza di orari scorrere */
+    /* Sfumatura inferiore per indicare la presenza di orari da scorrere */
     .times-grid-wrapper {
       position: relative;
     }
@@ -264,7 +279,7 @@
         desc: "Tre baie a forma di ferro di cavallo, perfettamente riparate dal vento di tramontana (Meltemi). La sabbia è dorata e fine, e i fondali digradano dolcemente, rendendola ideale per una nuotata tranquilla. L'intera area è cinta da un bellissimo e profumato parco di pini marittimi che offre ombra naturale. Sono presenti stabilimenti, docce e baretti, pur mantenendo un'atmosfera molto più rilassata rispetto ai grandi resort più lontani.",
         img: "img/agii-apostoli.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Agii+Apostoli+Beach+Chania",
-        freqNote: "✈️ I bus per l'ovest transitano ogni 15-20 min in estate (fino a notte):",
+        freqNote: "✈️ I bus per l'ovest transitano circa ogni 20 min in estate (fino a notte):",
         times: {
           to: [
             "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
@@ -403,7 +418,7 @@
         desc: "Borgo di pescatori situato all'estremità ovest della baia, dove finisce la lunghissima spiaggia continua. Spiaggia tranquilla di ciottoli con un mare trasparente, ideale per gli amanti dello snorkeling. È rinomata in tutta Creta per ospitare alcune delle migliori taverne di pesce fresco dell'isola, posizionate direttamente sul lungomare accanto al piccolo porto.",
         img: "img/kolymbari.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kolymbari+Beach+Chania",
-        freqNote: "🚌 Linea costiera capolinea Kolymbari (ogni 20 min dalle 8:00):",
+        freqNote: "🚌 Linea costiera capolinea Kolymbari (ogni 20 min):",
         times: {
           to: [
             "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
@@ -430,7 +445,7 @@
         name: "Kalathas Beach",
         direction: "est",
         timeMinutes: 20,
-        busLine: "STAVROS / HORAFAKIA",
+        busLine: "STAVROS",
         desc: "Nascosta in una profonda insenatura della penisola di Akrotiri, vanta una sabbia finissima dal colore quasi bianco. L'acqua è molto bassa per decine e decine di metri dalla riva, rendendola simile a una piscina naturale caldissima. A brevissima distanza spunta un caratteristico isolotto roccioso che chi sa nuotare raggiunge facilmente in poche bracciate. È un'oasi tranquilla e molto amata dagli abitanti di Chania.",
         img: "img/kalathas.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kalathas+Beach+Chania",
@@ -596,6 +611,10 @@
               </div>
               <div id="freq-${item.id}" class="note-freq">${item.freqNote}</div>
               
+              <div id="notice-${item.id}" class="return-notice" style="display: none;">
+                ℹ️ <strong>Nota Bene:</strong> Gli orari di ritorno sono indicativi di passaggio dalla fermata e non orari di partenza al capolinea.
+              </div>
+
               <div class="times-grid-wrapper">
                 <div class="times-grid-container">
                   <div id="grid-${item.id}" class="times-grid">
@@ -637,15 +656,20 @@
       const grid = document.getElementById(`grid-${id}`);
       const btnTo = document.getElementById(`btn-to-${id}`);
       const btnFrom = document.getElementById(`btn-from-${id}`);
+      const notice = document.getElementById(`notice-${id}`);
 
       if (direction === 'to') {
         grid.innerHTML = renderTimeSlots(item.times.to);
         btnTo.classList.add('active');
         btnFrom.classList.remove('active');
+        if (notice) notice.style.display = 'none';
       } else {
         grid.innerHTML = renderTimeSlots(item.times.from);
         btnFrom.classList.add('active');
         btnTo.classList.remove('active');
+        if (notice && item.direction !== 'aeroporto') {
+          notice.style.display = 'block';
+        }
       }
     }
 
