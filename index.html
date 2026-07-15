@@ -178,10 +178,32 @@
     }
     .dir-tab.active { background: #34C759; color: white; }
 
+    .times-grid-container {
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+      border-radius: 12px;
+      position: relative;
+    }
+    
+    /* Sfumatura inferiore per indicare la presenza di orari scorrere */
+    .times-grid-wrapper {
+      position: relative;
+    }
+    .times-grid-wrapper::after {
+      content: "";
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 25px;
+      background: linear-gradient(to top, var(--card-bg) 0%, rgba(255,255,255,0) 100%);
+      pointer-events: none;
+    }
+
     .times-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
       gap: 10px;
+      padding-bottom: 15px;
     }
 
     .time-slot {
@@ -189,9 +211,21 @@
       padding: 12px 4px;
       border-radius: 12px;
       text-align: center;
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 700;
       color: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 24px;
+    }
+    
+    .time-slot span.note {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--warning-text);
+      margin-top: 2px;
+      line-height: 1.1;
     }
     
     .note-freq {
@@ -207,7 +241,7 @@
 
   <header>
     <h1>Spiagge e Bus Chania 🚌</h1>
-    <p class="subtitle">Guida Orari e Linee (Estate)</p>
+    <p class="subtitle">Guida Orari e Linee (Estate 2026)</p>
   </header>
 
   <div class="segmented-control">
@@ -230,10 +264,24 @@
         desc: "Tre baie a forma di ferro di cavallo, perfettamente riparate dal vento di tramontana (Meltemi). La sabbia è dorata e fine, e i fondali digradano dolcemente, rendendola ideale per una nuotata tranquilla. L'intera area è cinta da un bellissimo e profumato parco di pini marittimi che offre ombra naturale. Sono presenti stabilimenti, docce e baretti, pur mantenendo un'atmosfera molto più rilassata rispetto ai grandi resort più lontani.",
         img: "img/agii-apostoli.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Agii+Apostoli+Beach+Chania",
-        freqNote: "✈️ I bus per l'ovest transitano ogni 15-20 min in estate:",
+        freqNote: "✈️ I bus per l'ovest transitano ogni 15-20 min in estate (fino a notte):",
         times: {
-          to: ["07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00"],
-          from: ["12:15", "12:45", "13:15", "13:45", "14:15", "14:45", "15:15", "15:45", "16:15", "16:35", "16:55", "17:15", "17:35", "17:55", "18:15", "18:35", "18:55", "19:15", "19:40", "20:10", "20:40"]
+          to: [
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
+            "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00",
+            "13:20", "13:40", "14:00", "14:20", "14:40", "15:00", "15:20", "15:40", "16:00", "16:20",
+            "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40",
+            "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00",
+            "23:30", "00:00", "00:30", "01:00"
+          ],
+          from: [
+            "06:35", "07:05", "07:35", "07:45", "08:45", "09:05", "09:25", "09:45", "10:05", "10:25",
+            "10:45", "11:05", "11:25", "11:45", "12:05", "12:25", "12:45", "13:05", "13:25", "13:45",
+            "14:05", "14:25", "14:45", "15:05", "15:25", "15:45", "16:05", "16:25", "16:45", "17:05",
+            "17:25", "17:45", "18:05", "18:25", "18:45", "19:05", "19:25", "19:45", "20:05", "20:25",
+            "20:45", "21:05", "21:25", "21:45", "22:05", "22:25", "22:45", "23:05", "23:25", "23:45",
+            "00:05", "00:35", "01:05", "01:35"
+          ]
         }
       },
       {
@@ -245,10 +293,24 @@
         desc: "La prima grande spiaggia della lunga riviera ovest. Un litorale lunghissimo di sabbia chiara e soffice. Rispetto alla vicina e caotica Agia Marina, mantiene un profilo leggermente più tranquillo, ideale per chi ama gli ampi spazi senza rinunciare ai comfort: ci sono ottimi lettini, ombrelloni imbottiti e taverne tradizionali eccellenti posizionate subito alle spalle dell'arenile. Essendo aperta verso nord, in giornate ventose può presentare qualche onda.",
         img: "img/stalos.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Stalos+Beach+Chania",
-        freqNote: "✈️ Servita dalla linea costiera principale (ogni 20 minuti circa):",
+        freqNote: "✈️ Linea costiera principale (ogni 20 min circa, da mattina a notte):",
         times: {
-          to: ["07:30", "08:00", "08:30", "09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"],
-          from: ["14:10", "14:40", "15:10", "15:40", "16:10", "16:30", "16:50", "17:10", "17:30", "17:50", "18:10", "18:30", "18:50", "19:10", "19:40", "20:10", "20:40", "21:10"]
+          to: [
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
+            "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00",
+            "13:20", "13:40", "14:00", "14:20", "14:40", "15:00", "15:20", "15:40", "16:00", "16:20",
+            "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40",
+            "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00",
+            "23:30", "00:00", "00:30", "01:00"
+          ],
+          from: [
+            "06:30", "07:00", "07:30", "07:40", "08:40", "09:00", "09:20", "09:40", "10:00", "10:20",
+            "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00", "13:20", "13:40",
+            "14:00", "14:20", "14:40", "15:00", "15:20", "15:40", "16:00", "16:20", "16:40", "17:00",
+            "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40", "20:00", "20:20",
+            "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00", "23:20", "23:40",
+            "00:00", "00:30", "01:00", "01:30"
+          ]
         }
       },
       {
@@ -260,10 +322,24 @@
         desc: "Il vero cuore pulsante del turismo organizzato cretese. Qui la spiaggia è un tappeto infinito di sabbia fine dorata, costellato di beach club attrezzatissimi, musica diffusa, centri per sport acquatici (parasailing, moto d'acqua) e servizio bar direttamente sotto l'ombrellone. Subito di fronte si staglia la sagoma pittoresca dell'isolotto protetto di Thodorou. È la meta perfetta se cerchi massima comodità, energia e vita di mare a 360 gradi.",
         img: "img/agia-marina.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Agia+Marina+Beach+Chania",
-        freqNote: "✈️ Transiti continui della linea per Kissamos/Kasteli (ogni 20 minuti):",
+        freqNote: "✈️ Transiti continui della linea per Kolymbari/Kissamos (ogni 20 min):",
         times: {
-          to: ["07:30", "08:00", "08:30", "09:00", "09:20", "09:40", "10:00", "10:20", "10:40", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30"],
-          from: ["14:05", "14:35", "15:05", "15:35", "16:05", "16:25", "16:45", "17:05", "17:25", "17:45", "18:05", "18:25", "18:45", "19:05", "19:35", "20:05", "20:35", "21:05"]
+          to: [
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
+            "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00",
+            "13:20", "13:40", "14:00", "14:20", "14:40", "15:00", "15:20", "15:40", "16:00", "16:20",
+            "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40",
+            "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00",
+            "23:30", "00:00", "00:30", "01:00"
+          ],
+          from: [
+            "06:25", "06:55", "07:25", "07:35", "08:35", "08:55", "09:15", "09:35", "09:55", "10:15",
+            "10:35", "10:55", "11:15", "11:35", "11:55", "12:15", "12:35", "12:55", "13:15", "13:35",
+            "13:55", "14:15", "14:35", "14:55", "15:15", "15:35", "15:55", "16:15", "16:35", "16:55",
+            "17:15", "17:35", "17:55", "18:15", "18:35", "18:55", "19:15", "19:35", "19:55", "20:15",
+            "20:35", "20:55", "21:15", "21:35", "21:55", "22:15", "22:35", "22:55", "23:15", "23:35",
+            "23:55", "00:25", "00:55", "01:25"
+          ]
         }
       },
       {
@@ -275,10 +351,24 @@
         desc: "La naturale e scenografica prosecuzione di Agia Marina, con un tocco ancora più cosmopolita. La sabbia qui si mescola a piccolissimi e lisci ciottoli colorati sulla battigia. È delimitata da stabilimenti eleganti e grandi resort. Il punto di forza è che a fine giornata puoi salire a piedi nella 'Ano Platanias', la meravigliosa e antica parte alta del paese arroccata sulla collina, per goderti un tramonto sul golfo sorseggiando qualcosa.",
         img: "img/platanias.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Platanias+Beach+Chania",
-        freqNote: "✈️ Autobus frequenti da e per Chania (ogni 20-30 min):",
+        freqNote: "✈️ Autobus frequenti da e per Chania (ogni 20 min circa):",
         times: {
-          to: ["07:30", "08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00"],
-          from: ["14:00", "14:30", "15:00", "15:30", "16:00", "16:20", "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:30", "20:00", "20:30", "21:00"]
+          to: [
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
+            "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00",
+            "13:20", "13:40", "14:00", "14:20", "14:40", "15:00", "15:20", "15:40", "16:00", "16:20",
+            "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40",
+            "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00",
+            "23:30", "00:00", "00:30", "01:00"
+          ],
+          from: [
+            "06:20", "06:50", "07:20", "07:30", "08:30", "08:50", "09:10", "09:30", "09:50", "10:10",
+            "10:30", "10:50", "11:10", "11:30", "11:50", "12:10", "12:30", "12:50", "13:10", "13:30",
+            "13:50", "14:10", "14:30", "14:50", "15:10", "15:30", "15:50", "16:10", "16:30", "16:50",
+            "17:10", "17:30", "17:50", "18:10", "18:30", "18:50", "19:10", "19:30", "19:50", "20:10",
+            "20:30", "20:50", "21:10", "21:30", "21:50", "22:10", "22:30", "22:50", "23:10", "23:30",
+            "23:50", "00:20", "00:50", "01:20"
+          ]
         }
       },
       {
@@ -286,14 +376,22 @@
         name: "Maleme Beach",
         direction: "ovest",
         timeMinutes: 38,
-        busLine: "KOLYMBARI oppure KISSAMOS / KASTELI",
+        busLine: "MALEME BEACH (oppure KOLYMBARI / KISSAMOS)",
         desc: "Famosa per il suo ruolo storico durante la Seconda Guerra Mondiale, Maleme offre una spiaggia molto più silenziosa e selvaggia. Il fondo è un mix di sabbia scura e ciottoli tondi che rendono le acque trasparentissime. È la scelta tattica per scappare dalla folla di agosto: qui si respira assoluta pace e le taverne lungo la strada litoranea offrono porzioni abbondanti e prezzi molto più contenuti rispetto alla zona centrale.",
         img: "img/maleme.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Maleme+Beach+Chania",
-        freqNote: "🚌 Linea Chania - Kolymbari/Kissamos (circa 1 bus ogni ora):",
+        freqNote: "🚌 Linea diretta Maleme Beach (partenze ogni 30 min fino a sera):",
         times: {
-          to: ["07:30", "08:15", "09:00", "09:30", "10:30", "11:00", "12:00", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30"],
-          from: ["13:50", "14:50", "15:50", "16:50", "17:20", "17:50", "18:20", "18:50", "19:50", "20:50"]
+          to: [
+            "09:15", "09:45", "10:15", "10:45", "11:15", "11:45", "12:15", "12:45", "13:15", "13:45",
+            "14:15", "14:45", "15:15", "15:45", "16:15", "16:45", "17:15", "17:45", "18:15", "18:45",
+            "19:15", "19:45", "20:15", "20:45", "21:15", "21:45", "22:15", "22:45", "23:15", "23:45"
+          ],
+          from: [
+            "10:00", "10:30", "11:00", "11:30", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+            "15:00", "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30",
+            "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30", "00:00", "00:30"
+          ]
         }
       },
       {
@@ -301,14 +399,28 @@
         name: "Kolymbari Beach",
         direction: "ovest",
         timeMinutes: 48,
-        busLine: "KOLYMBARI oppure KISSAMOS / KASTELI",
+        busLine: "KOLYMBARI",
         desc: "Borgo di pescatori situato all'estremità ovest della baia, dove finisce la lunghissima spiaggia continua. Spiaggia tranquilla di ciottoli con un mare trasparente, ideale per gli amanti dello snorkeling. È rinomata in tutta Creta per ospitare alcune delle migliori taverne di pesce fresco dell'isola, posizionate direttamente sul lungomare accanto al piccolo porto.",
         img: "img/kolymbari.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kolymbari+Beach+Chania",
-        freqNote: "🚌 Orari marcia linea diretta per Kolymbari / Kissamos:",
+        freqNote: "🚌 Linea costiera capolinea Kolymbari (ogni 20 min dalle 8:00):",
         times: {
-          to: ["07:30", "08:15", "09:00", "10:30", "11:30", "12:30", "13:30", "14:30", "15:30", "16:30", "17:30"],
-          from: ["13:40", "14:40", "15:40", "16:40", "17:10", "17:40", "18:10", "18:40", "19:40", "20:40"]
+          to: [
+            "06:00", "06:30", "07:00", "07:30", "08:00", "08:20", "08:40", "09:00", "09:20", "09:40",
+            "10:00", "10:20", "10:40", "11:00", "11:20", "11:40", "12:00", "12:20", "12:40", "13:00",
+            "13:20", "13:40", "14:00", "14:20", "14:40", "15:00", "15:20", "15:40", "16:00", "16:20",
+            "16:40", "17:00", "17:20", "17:40", "18:00", "18:20", "18:40", "19:00", "19:20", "19:40",
+            "20:00", "20:20", "20:40", "21:00", "21:20", "21:40", "22:00", "22:20", "22:40", "23:00",
+            "23:30", "00:00", "00:30", "01:00"
+          ],
+          from: [
+            "06:20", "06:50", "07:20", "07:30", "08:30", "08:50", "09:10", "09:30", "09:50", "10:10",
+            "10:30", "10:50", "11:10", "11:30", "11:50", "12:10", "12:30", "12:50", "13:10", "13:30",
+            "13:50", "14:10", "14:30", "14:50", "15:10", "15:30", "15:50", "16:10", "16:30", "16:50",
+            "17:10", "17:30", "17:50", "18:10", "18:30", "18:50", "19:10", "19:30", "19:50", "20:10",
+            "20:30", "20:50", "21:10", "21:30", "21:50", "22:10", "22:30", "22:50", "23:10", "23:30",
+            "23:50", "00:20", "00:50", "01:20", "01:45"
+          ]
         }
       },
 
@@ -324,8 +436,24 @@
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Kalathas+Beach+Chania",
         freqNote: "🚌 Servita dagli autobus diretti a Stavros:",
         times: {
-          to: ["06:50", "09:00", "10:00", "12:00", "14:15", "16:00", "18:00", "20:00"],
-          from: ["10:50", "12:50", "15:05", "16:50", "18:50", "20:50"]
+          to: [
+            { time: "06:50", note: "Lun-Sab" },
+            { time: "10:00" },
+            { time: "12:00" },
+            { time: "14:15" },
+            { time: "16:00" },
+            { time: "18:00" },
+            { time: "20:00" }
+          ],
+          from: [
+            { time: "07:20", note: "Lun-Sab" },
+            { time: "10:40" },
+            { time: "12:40" },
+            { time: "14:55" },
+            { time: "16:40" },
+            { time: "18:40" },
+            { time: "20:40" }
+          ]
         }
       },
       {
@@ -333,14 +461,14 @@
         name: "Marathi Beach",
         direction: "est",
         timeMinutes: 30,
-        busLine: "MARATHI / LOUTRAKI",
+        busLine: "LOUTRAKI - MARATHI",
         desc: "Affacciata verso sud-est (e dunque strutturalmente al riparo dai forti venti del nord), Marathi è composta da due spiaggette gemelle divise da un porticciolo. La sabbia è fine, e il mare è costantemente piatto come una tavola, perfetto per un relax totale. Dal lettino si gode di una vista magnifica sulle Montagne Bianche all'orizzonte. È famosissima in zona per le pittoresche taverne dove si pranza praticamente 'pieds dans l'eau'.",
         img: "img/marathi.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Marathi+Beach+Chania",
-        freqNote: "🚌 Orari stagionali estivi (Linea Marathi):",
+        freqNote: "🚌 Orari stagionali estivi (Linea Marathi/Loutraki, Tutti i giorni):",
         times: {
-          to: ["09:00", "10:30", "12:00", "14:00", "16:30"],
-          from: ["12:45", "14:45", "17:15", "18:30"]
+          to: ["11:00", "13:00", "15:00", "17:00", "19:00"],
+          from: ["11:30", "13:30", "15:30", "17:30", "19:30"]
         }
       },
       {
@@ -354,8 +482,24 @@
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Stavros+Beach+Chania",
         freqNote: "🚌 Orari ufficiali linea Chania - Stavros:",
         times: {
-          to: ["06:50", "09:00", "10:00", "12:00", "14:15", "16:00", "18:00", "20:00"],
-          from: ["10:40", "12:40", "14:55", "16:40", "18:40", "20:40"]
+          to: [
+            { time: "06:50", note: "Lun-Sab" },
+            { time: "10:00" },
+            { time: "12:00" },
+            { time: "14:15" },
+            { time: "16:00" },
+            { time: "18:00" },
+            { time: "20:00" }
+          ],
+          from: [
+            { time: "07:20", note: "Lun-Sab" },
+            { time: "10:40" },
+            { time: "12:40" },
+            { time: "14:55" },
+            { time: "16:40" },
+            { time: "18:40" },
+            { time: "20:40" }
+          ]
         }
       },
       {
@@ -367,9 +511,9 @@
         desc: "Una caletta selvaggia di una bellezza folgorante e particolarissima. Il mare ha scavato nel corso dei millenni un profondo canyon a forma di fulmine tra le rocce, creando uno stretto canale d'acqua azzurrissima che si spinge nella terraferma. Attenzione: non c'è ombra, non è attrezzata, e per scendere dalla fermata del bus fino all'acqua bisogna affrontare un sentiero di capre molto ripido (assolutamente necessarie le scarpe da ginnastica chiuse!).",
         img: "img/seitan.jpg",
         mapsUrl: "https://www.google.com/maps/search/?api=1&query=Seitan+Limania+Beach+Chania",
-        freqNote: "🚌 Linea speciale estiva per Seitan Limania:",
+        freqNote: "🚌 Linea speciale estiva per Seitan Limania (Tutti i giorni):",
         times: {
-          to: ["10:00", "11:30", "13:30", "15:30", "17:30"],
+          to: ["11:30", "13:30", "15:30", "17:30"],
           from: ["12:15", "14:15", "16:15", "18:15"]
         }
       },
@@ -384,21 +528,25 @@
         desc: "Il pullman ufficiale KTEL è il mezzo più comodo e veloce per muoversi tra l'aeroporto internazionale Daskalogiannis e la Stazione Centrale dei bus di Chania (nel centro città). Si tratta di moderni pullman granturismo dotati di aria condizionata e capienti stive inferiori per riporre in totale comodità valigie di ogni dimensione. All'aeroporto, la fermata si trova sul marciapiede subito all'uscita degli Arrivi, girando a destra. Il biglietto costa circa 3,00 € e si può acquistare in biglietteria, al chiosco automatico fuori dagli arrivi o direttamente online.",
         img: "img/airport.jpg",
         mapsUrl: "https://maps.app.goo.gl/9Z3R6K9XQ1b4W5e69",
-        freqNote: "✈️ Servizio estivo: corse quotidiane ed eccezioni notturne nel weekend:",
+        freqNote: "✈️ Orari estivi quotidiani ed eccezioni notturne nel weekend:",
         times: {
           to: [
             "04:20", "06:00", "06:30", "07:30", "08:00", "08:30", "09:00", "10:00", 
             "11:15", "12:00", "12:30", "13:00", "13:30", "14:00", "14:30", "15:00", 
             "15:30", "16:00", "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", 
             "19:30", "20:00", "20:30", "21:00", "21:30", "22:00", "22:30", "23:00",
-            "00:30 (Solo Gio & Ven)", "00:45 (Solo Sab)", "01:00 (Solo Mar & Mer)"
+            { time: "00:30", note: "Gio & Ven" },
+            { time: "00:45", note: "Sabato" },
+            { time: "01:00", note: "Mar & Mer" }
           ],
           from: [
             "05:50", "07:40", "08:10", "08:40", "09:30", "10:00", "10:30", "11:00", 
             "12:00", "13:00", "13:30", "14:00", "14:30", "15:00", "15:30", "16:00", 
             "16:30", "17:00", "17:30", "18:00", "18:30", "19:00", "19:30", "20:00", 
             "20:30", "21:00", "21:30", "22:00", "22:30", "23:00", "23:30", "00:00",
-            "01:00 (Solo Gio & Ven)", "01:15 (Solo Sab)", "01:40 (Solo Mar & Mer)"
+            { time: "01:00", note: "Gio & Ven" },
+            { time: "01:15", note: "Sabato" },
+            { time: "01:40", note: "Mar & Mer" }
           ]
         }
       }
@@ -418,7 +566,6 @@
         const card = document.createElement('div');
         card.className = 'beach-card';
         
-        // Determina il testo per i pulsanti di direzione (per l'aeroporto cambiano le etichette)
         const labelTo = item.direction === 'aeroporto' ? "Da Chania ➔ Aeroporto" : "Da Chania ➔ Spiaggia";
         const labelFrom = item.direction === 'aeroporto' ? "Dall'Aeroporto ➔ Chania" : "Ritorno ➔ Chania";
 
@@ -448,8 +595,13 @@
                 <button id="btn-from-${item.id}" class="dir-tab" onclick="switchRoute('${item.id}', 'from')">${labelFrom}</button>
               </div>
               <div id="freq-${item.id}" class="note-freq">${item.freqNote}</div>
-              <div id="grid-${item.id}" class="times-grid">
-                ${renderTimeSlots(item.times.to)}
+              
+              <div class="times-grid-wrapper">
+                <div class="times-grid-container">
+                  <div id="grid-${item.id}" class="times-grid">
+                    ${renderTimeSlots(item.times.to)}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -458,8 +610,14 @@
       });
     }
 
+    // Supporta sia semplici stringhe di orari (es. "08:00") che oggetti con note (es. { time: "06:50", note: "Lun-Sab" })
     function renderTimeSlots(timesArray) {
-      return timesArray.map(time => `<div class="time-slot">${time}</div>`).join('');
+      return timesArray.map(item => {
+        if (typeof item === 'object' && item !== null) {
+          return `<div class="time-slot">${item.time}<span class="note">${item.note}</span></div>`;
+        }
+        return `<div class="time-slot">${item}</div>`;
+      }).join('');
     }
 
     function setDirection(dir, btnElement) {
